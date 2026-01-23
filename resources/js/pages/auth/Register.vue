@@ -31,6 +31,7 @@ import { Form, Head } from '@inertiajs/vue3';
                         id="name"
                         type="text"
                         required
+                        readonly
                         autofocus
                         :tabindex="1"
                         autocomplete="name"
@@ -46,6 +47,7 @@ import { Form, Head } from '@inertiajs/vue3';
                         id="email"
                         type="email"
                         required
+                        readonly
                         :tabindex="2"
                         autocomplete="email"
                         name="email"
@@ -60,6 +62,7 @@ import { Form, Head } from '@inertiajs/vue3';
                         id="password"
                         type="password"
                         required
+                        readonly
                         :tabindex="3"
                         autocomplete="new-password"
                         name="password"
@@ -74,6 +77,7 @@ import { Form, Head } from '@inertiajs/vue3';
                         id="password_confirmation"
                         type="password"
                         required
+                        readonly
                         :tabindex="4"
                         autocomplete="new-password"
                         name="password_confirmation"

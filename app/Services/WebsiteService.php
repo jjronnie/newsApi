@@ -16,7 +16,7 @@ class WebsiteService
     public function getPostsByWebsite(Website $website, int $page = 1, int $perPage = 10): array
     {
         $cacheKey = "website_posts_{$website->id}_page_{$page}";
-        
+
         // Check cache first
         if (Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
@@ -32,14 +32,14 @@ class WebsiteService
 
             if ($response->successful()) {
                 $data = $response->json();
-                $totalPages = (int)$response->header('X-WP-TotalPages') ?? 1;
-                $total = (int)$response->header('X-WP-Total') ?? 0;
+                $totalPages = (int) $response->header('X-WP-TotalPages') ?? 1;
+                $total = (int) $response->header('X-WP-Total') ?? 0;
 
                 $processed = $this->processPostData($data, $website->url);
-                
+
                 // Update last_updated timestamp
                 $website->update(['last_updated' => now()]);
-                
+
                 $result = [
                     'posts' => $processed,
                     'pagination' => [
@@ -53,11 +53,11 @@ class WebsiteService
 
                 // Cache the results
                 Cache::put($cacheKey, $result, now()->addMinutes($this->cacheMinutes));
-                
+
                 return $result;
             }
         } catch (\Exception $e) {
-            \Log::error("Error fetching posts from website {$website->id}: " . $e->getMessage());
+            \Log::error("Error fetching posts from website {$website->id}: ".$e->getMessage());
         }
 
         return [
@@ -79,7 +79,7 @@ class WebsiteService
     public function getPost(Website $website, int $postId): array
     {
         $cacheKey = "website_post_{$website->id}_{$postId}";
-        
+
         if (Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
         }
@@ -93,13 +93,13 @@ class WebsiteService
             if ($response->successful()) {
                 $post = $response->json();
                 $processed = $this->processSinglePost($post, $website->url);
-                
+
                 Cache::put($cacheKey, $processed, now()->addMinutes($this->cacheMinutes));
-                
+
                 return $processed;
             }
         } catch (\Exception $e) {
-            \Log::error("Error fetching post {$postId} from website {$website->id}: " . $e->getMessage());
+            \Log::error("Error fetching post {$postId} from website {$website->id}: ".$e->getMessage());
         }
 
         return ['error' => 'Failed to fetch post'];
@@ -129,7 +129,7 @@ class WebsiteService
                 }
             }
         } catch (\Exception $e) {
-            \Log::error("Connection test failed for {$websiteUrl}: " . $e->getMessage());
+            \Log::error("Connection test failed for {$websiteUrl}: ".$e->getMessage());
         }
 
         return null;
@@ -141,11 +141,11 @@ class WebsiteService
     private function normalizeUrl(string $url): string
     {
         $url = trim($url);
-        
-        if (!str_starts_with($url, 'http://') && !str_starts_with($url, 'https://')) {
-            $url = 'https://' . $url;
+
+        if (! str_starts_with($url, 'http://') && ! str_starts_with($url, 'https://')) {
+            $url = 'https://'.$url;
         }
-        
+
         return rtrim($url, '/');
     }
 
@@ -161,11 +161,11 @@ class WebsiteService
             $candidates[] = $this->normalizeUrl($trimmed);
 
             if (str_starts_with($trimmed, 'https://')) {
-                $candidates[] = $this->normalizeUrl('http://' . substr($trimmed, 8));
+                $candidates[] = $this->normalizeUrl('http://'.substr($trimmed, 8));
             }
         } else {
-            $candidates[] = $this->normalizeUrl('https://' . $trimmed);
-            $candidates[] = $this->normalizeUrl('http://' . $trimmed);
+            $candidates[] = $this->normalizeUrl('https://'.$trimmed);
+            $candidates[] = $this->normalizeUrl('http://'.$trimmed);
         }
 
         return array_values(array_unique($candidates));
@@ -176,7 +176,7 @@ class WebsiteService
      */
     private function processPostData(array $posts, string $websiteUrl): array
     {
-        return array_map(fn($post) => $this->formatPost($post, $websiteUrl), $posts);
+        return array_map(fn ($post) => $this->formatPost($post, $websiteUrl), $posts);
     }
 
     /**
@@ -193,7 +193,7 @@ class WebsiteService
     private function formatPost(array $post, string $websiteUrl): array
     {
         $baseUrl = $this->normalizeUrl($websiteUrl);
-        
+
         $featuredImage = null;
         if (isset($post['_embedded']['wp:featuredmedia'][0]['source_url'])) {
             $featuredImage = $post['_embedded']['wp:featuredmedia'][0]['source_url'];

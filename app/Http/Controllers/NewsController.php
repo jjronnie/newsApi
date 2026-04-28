@@ -20,7 +20,7 @@ class NewsController extends Controller
     public function index(): JsonResponse
     {
         $news = $this->newsService->getNewsByCategories(['technology', 'sports']);
-        
+
         return response()->json([
             'success' => true,
             'data' => $news,
@@ -34,16 +34,16 @@ class NewsController extends Controller
     public function getByCategory(string $category): JsonResponse
     {
         $validCategories = ['technology', 'sports', 'business', 'entertainment', 'general', 'health', 'science'];
-        
-        if (!in_array(strtolower($category), $validCategories)) {
+
+        if (! in_array(strtolower($category), $validCategories)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid category. Valid categories: ' . implode(', ', $validCategories),
+                'message' => 'Invalid category. Valid categories: '.implode(', ', $validCategories),
             ], 400);
         }
 
         $news = $this->newsService->getNewsByCategories([strtolower($category)]);
-        
+
         return response()->json([
             'success' => true,
             'category' => $category,
@@ -58,7 +58,7 @@ class NewsController extends Controller
     public function clearCache(): JsonResponse
     {
         $this->newsService->clearCache(['technology', 'sports']);
-        
+
         return response()->json([
             'success' => true,
             'message' => 'News cache cleared successfully',

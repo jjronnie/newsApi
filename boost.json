@@ -2,12 +2,11 @@
     "agents": [
         "opencode"
     ],
+    "cloud": false,
     "editors": [
         "opencode",
         "vscode"
     ],
-    "guidelines": [
-        "laravel/fortify"
-    ],
+    "guidelines": true,
     "sail": true
 }

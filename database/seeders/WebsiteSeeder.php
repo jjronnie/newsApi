@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Website;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Website;
 use Illuminate\Database\Seeder;
 
 class WebsiteSeeder extends Seeder
@@ -61,7 +60,6 @@ class WebsiteSeeder extends Seeder
             'The Guardian Technology' => 'theguardian.com',
             'ZDNet' => 'zdnet.com',
         ];
-
 
         foreach ($websites as $name => $url) {
             Website::create([

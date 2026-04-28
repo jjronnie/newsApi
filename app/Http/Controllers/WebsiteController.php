@@ -23,7 +23,7 @@ class WebsiteController extends Controller
     public function index()
     {
         $websites = Website::latest()->get();
-        
+
         return Inertia::render('Websites/Index', [
             'websites' => $websites,
         ]);
@@ -41,7 +41,7 @@ class WebsiteController extends Controller
 
         $resolvedUrl = $this->websiteService->resolveBaseUrl($validated['url']);
 
-        if (!$resolvedUrl) {
+        if (! $resolvedUrl) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unable to connect to this website. Make sure it has WordPress REST API enabled.',
@@ -140,7 +140,7 @@ class WebsiteController extends Controller
 
         $resolvedUrl = $this->websiteService->resolveBaseUrl($validated['url']);
 
-        if (!$resolvedUrl) {
+        if (! $resolvedUrl) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unable to connect to this website. Make sure it has WordPress REST API enabled.',

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+use Illuminate\Support\Facades\Http;
 
 
 Route::get('/', function () {
@@ -17,6 +18,20 @@ Route::get('/register', function () {
     return redirect()->route('login');
 })->name('register');
 
+
+
+Route::get('/test-wp-post', function () {
+    $response = Http::withBasicAuth(
+        config('wordpress.username'),
+        config('wordpress.app_password')
+    )->post(config('wordpress.url') . '/wp-json/wp/v2/posts', [
+        'title'   => 'Hello from Laravel',
+        'content' => '<p>This post was created by Laravel via REST API.</p>',
+        'status'  => 'draft',
+    ]);
+
+    return $response->json();
+});
 
 
 Route::get('dashboard', function () {

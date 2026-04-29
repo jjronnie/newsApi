@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AiChatLauncher from '@/components/AiChatLauncher.vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import {
     Card,
@@ -46,5 +47,6 @@ defineProps<{
                 </Card>
             </div>
         </div>
+        <AiChatLauncher />
     </div>
 </template>

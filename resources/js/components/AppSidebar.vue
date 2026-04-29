@@ -14,7 +14,7 @@ import {
 import { dashboard, news } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Newspaper, Globe } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Newspaper, Globe, FileText, List, ClipboardList, Database, MessageSquare, Settings } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
@@ -32,6 +32,36 @@ const mainNavItems: NavItem[] = [
         title: 'Websites',
         href: { url: '/websites', method: 'get' },
         icon: Globe,
+    },
+    {
+        title: 'Articles',
+        href: { url: '/admin/articles', method: 'get' },
+        icon: FileText,
+    },
+    {
+        title: 'WP Categories',
+        href: { url: '/admin/wp-categories', method: 'get' },
+        icon: List,
+    },
+    {
+        title: 'AI Logs',
+        href: { url: '/admin/logs', method: 'get' },
+        icon: ClipboardList,
+    },
+    {
+        title: 'Jobs',
+        href: { url: '/admin/jobs', method: 'get' },
+        icon: Database,
+    },
+    {
+        title: 'Topics',
+        href: { url: '/admin/topics', method: 'get' },
+        icon: MessageSquare,
+    },
+    {
+        title: 'Instructions',
+        href: { url: '/admin/instructions', method: 'get' },
+        icon: Settings,
     },
 ];
 

@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\WebsiteController;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -12,19 +11,6 @@ Route::get('/', function () {
         'canRegister' => Features::enabled(Features::registration()),
     ]);
 })->name('home');
-
-Route::get('/test-wp-post', function () {
-    $response = Http::withBasicAuth(
-        config('wordpress.username'),
-        config('wordpress.app_password')
-    )->post(config('wordpress.url').'/wp-json/wp/v2/posts', [
-        'title' => 'Hello from Laravel',
-        'content' => '<p>This post was created by Laravel via REST API.</p>',
-        'status' => 'draft',
-    ]);
-
-    return $response->json();
-});
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
@@ -43,3 +29,4 @@ Route::get('/api/websites/{website}/posts', [WebsiteController::class, 'getPosts
 Route::get('/api/websites/{website}/posts/{postId}', [WebsiteController::class, 'getPost'])->name('api.websites.post');
 
 require __DIR__.'/settings.php';
+require __DIR__.'/admin.php';

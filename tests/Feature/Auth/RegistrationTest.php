@@ -1,9 +1,9 @@
 <?php
 
-test('registration screen can be rendered', function () {
+test('registration screen redirects to login', function () {
     $response = $this->get(route('register'));
 
-    $response->assertOk();
+    $response->assertRedirect(route('login'));
 });
 
 test('new users can register', function () {

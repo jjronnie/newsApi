@@ -12,9 +12,11 @@ export default defineConfig({
             refresh: true,
         }),
         tailwindcss(),
-        wayfinder({
-            formVariants: true,
-        }),
+        // wayfinder({
+        //     formVariants: true,
+        // }),
+        // Note: wayfinder plugin disabled because Node container lacks PHP.
+        // Run manually before build: sail artisan wayfinder:generate --with-form
         vue({
             template: {
                 transformAssetUrls: {

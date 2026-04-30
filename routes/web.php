@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\WebsiteController;
+use App\Models\Article;
+use App\Models\User;
+use App\Models\Website;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -12,8 +15,27 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::get('/register', function () {
+    return redirect()->route('login');
+})->name('register');
+
 Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
+    $stats = [
+        'articles' => [
+            'total' => Article::count(),
+            'pushed' => Article::where('status', 'pushed')->count(),
+            'generated' => Article::where('status', 'generated')->count(),
+            'pending' => Article::where('status', 'pending')->count(),
+            'failed' => Article::where('status', 'failed')->count(),
+            'today' => Article::whereDate('generated_at', today())->count(),
+        ],
+        'users' => User::count(),
+        'websites' => Website::count(),
+    ];
+
+    return Inertia::render('Dashboard', [
+        'stats' => $stats,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('news', function () {

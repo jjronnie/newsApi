@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ArticleChatController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\ArticleTopicController;
 use App\Http\Controllers\Admin\JobController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\WpCategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +46,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     // AI Job Logs
     Route::get('/logs', [AiJobLogController::class, 'index'])->name('logs.index');
     Route::delete('/logs/{log}', [AiJobLogController::class, 'destroy'])->name('logs.destroy');
+
+    // Users
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     // Queued Jobs
     Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');

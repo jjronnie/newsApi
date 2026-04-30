@@ -12,9 +12,9 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard, news } from '@/routes';
-import { type NavItem } from '@/types';
+import type { NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Newspaper, Globe, FileText, List, ClipboardList, Database, MessageSquare, Settings } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Newspaper, Globe, FileText, List, ClipboardList, Database, MessageSquare, Settings, Users } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
@@ -63,20 +63,14 @@ const mainNavItems: NavItem[] = [
         href: { url: '/admin/instructions', method: 'get' },
         icon: Settings,
     },
+    {
+        title: 'Users',
+        href: { url: '/admin/users', method: 'get' },
+        icon: Users,
+    },
 ];
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
-];
+
 </script>
 
 <template>

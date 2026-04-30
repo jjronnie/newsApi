@@ -33,7 +33,7 @@ class NewsController extends Controller
      */
     public function getByCategory(string $category): JsonResponse
     {
-        $validCategories = ['technology', 'sports', 'business', 'entertainment', 'general', 'health', 'science'];
+        $validCategories = ['technology', 'business', 'entertainment', 'general'];
 
         if (! in_array(strtolower($category), $validCategories)) {
             return response()->json([

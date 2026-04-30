@@ -22,9 +22,8 @@ class AiContentWriter
 
         try {
             $response = $this->agent->prompt($this->agent->getTopicPrompt());
-            $data = $this->decodeResponse($response->text);
+            $data = $this->decodeJson($response->text);
             $data = $this->normalizePayload($data);
-
             $this->validateResponse($data);
 
             return [
@@ -110,7 +109,7 @@ class AiContentWriter
         }
     }
 
-    protected function decodeResponse(string $text): array
+    protected function decodeJson(string $text): array
     {
         // Strip markdown code fences
         $text = preg_replace('/```[a-z]*\s*|```\s*$/m', '', $text);
@@ -123,18 +122,49 @@ class AiContentWriter
         // Remove invalid control characters (except whitespace that's valid in JSON)
         $text = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $text);
 
-        $data = json_decode($text, true);
+        // Try to fix truncated JSON by closing unclosed structures
+        $text = $this->repairJson($text);
 
-        if (! is_array($data) || json_last_error() !== JSON_ERROR_NONE) {
+        $payload = json_decode($text, true);
+
+        if (! is_array($payload) || json_last_error() !== JSON_ERROR_NONE) {
             throw new \RuntimeException('Invalid JSON response from AI: '.json_last_error_msg().'. Raw response: '.Str::limit($text, 300));
         }
 
         // Ensure content_html is not empty - if it is, the response was likely truncated
-        if (isset($data['content_html']) && empty(trim(strip_tags($data['content_html'])))) {
+        if (isset($payload['content_html']) && empty(trim(strip_tags($payload['content_html'])))) {
             throw new \RuntimeException('AI returned empty content_html. The response may have been truncated. Please try again.');
         }
 
-        return $data;
+        return $payload;
+    }
+
+    protected function repairJson(string $text): string
+    {
+        // Count open vs closed brackets/braces to detect truncation
+        $openBraces = substr_count($text, '{');
+        $closedBraces = substr_count($text, '}');
+        $openBrackets = substr_count($text, '[');
+        $closedBrackets = substr_count($text, ']');
+
+        // Remove trailing comma before closing brace/bracket
+        $text = preg_replace('/,\s*([}\]])/', '$1', $text);
+
+        // Add missing closing braces/brackets
+        if ($openBrackets > $closedBrackets) {
+            $text .= str_repeat(']', $openBrackets - $closedBrackets);
+        }
+        if ($openBraces > $closedBraces) {
+            $text .= str_repeat('}', $openBraces - $closedBraces);
+        }
+
+        // Close any unclosed strings at the end
+        $lastQuote = strrpos($text, '"');
+        if ($lastQuote !== false && substr_count(substr($text, 0, $lastQuote + 1), '"') % 2 !== 0) {
+            $text .= '"';
+        }
+
+        return $text;
     }
 
     protected function normalizePayload(array $data): array

@@ -7,7 +7,7 @@ use Laravel\Ai\Attributes\MaxTokens;
 use Laravel\Ai\Contracts\Agent;
 use Laravel\Ai\Promptable;
 
-#[MaxTokens(16384)]
+#[MaxTokens(8192)]
 class ContentWriterAgent implements Agent
 {
     use Promptable;

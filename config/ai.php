@@ -11,7 +11,7 @@ return [
             'key' => env('GROQ_API_KEY'),
             'models' => [
                 'text' => [
-                    'default' => 'llama-3.3-70b-versatile',
+                    'default' => 'llama-3.1-8b-instant',
                     'cheapest' => 'llama-3.1-8b-instant',
                     'smartest' => 'llama-3.3-70b-versatile',
                 ],

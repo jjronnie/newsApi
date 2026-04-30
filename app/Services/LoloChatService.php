@@ -12,12 +12,12 @@ class LoloChatService
 {
     public function converse(User $user, string $message, array $history = [], ?Article $article = null): array
     {
+        // Limit history to last 5 messages to avoid 413 errors
+        $history = array_slice($history, -5);
+
         $prompt = $article
             ? $this->articleEditingPrompt($user, $message, $history, $article)
             : $this->contentPlanningPrompt($user, $message, $history);
-
-        // Limit history to last 5 messages to avoid 413 errors
-        $history = array_slice($history, -5);
 
         $response = (new ContentWriterAgent('', []))->prompt($prompt);
         $payload = $this->decodeJson($response->text);
@@ -96,7 +96,7 @@ PROMPT
                 $message,
                 $article->title,
                 $article->excerpt,
-                Str::limit(strip_tags($article->content_html), 2500),
+                Str::limit(strip_tags($article->content_html), 1200),
             ],
             <<<'PROMPT'
 You are Lolo, a professional AI editor helping {user_name} improve an existing article.
@@ -187,7 +187,7 @@ PROMPT
     {
         return collect($history)
             ->filter(fn ($message) => isset($message['role'], $message['content']))
-            ->map(fn ($message) => ($message['role'] === 'user' ? 'User' : 'Lolo').': '.Str::limit(strip_tags($message['content']), 2000))
+            ->map(fn ($message) => ($message['role'] === 'user' ? 'User' : 'Lolo').': '.Str::limit(strip_tags($message['content']), 1000))
             ->implode("\n");
     }
 
